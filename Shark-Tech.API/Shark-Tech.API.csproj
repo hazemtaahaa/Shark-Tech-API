@@ -16,10 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\Shark-Tech.BL\Shark-Tech.BL.csproj" />
     <ProjectReference Include="..\Shark-Tech.DAL\Shark-Tech.DAL.csproj" />
   </ItemGroup>
 

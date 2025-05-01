@@ -42,14 +42,14 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await query.AsNoTracking().ToListAsync();
     }
 
-    public Task<T> GetByIdAsync(Guid id)
+    public async Task<T> GetByIdAsync(Guid id)
     {
-       var entity = _context.Set<T>().Find(id);
+       var entity = await _context.Set<T>().FindAsync(id);
         if (entity == null)
         {
             throw new KeyNotFoundException($"Entity with id {id} not found.");
         }
-        return Task.FromResult(entity);
+        return entity;
     }
 
     public async Task<T> GetByIdAsync(Guid id, params Expression<Func<T, object>>[] includes)
