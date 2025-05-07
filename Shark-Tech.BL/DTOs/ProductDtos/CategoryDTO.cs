@@ -6,3 +6,9 @@ public record CategoryDTO
     string Description
 );
 
+public record UpdateCategoryDTO
+(
+    Guid Id,
+   string Name,
+    string Description
+);

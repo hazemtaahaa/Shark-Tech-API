@@ -11,4 +11,6 @@ public class ProductImageRepository : GenericRepository<ProductImage>, IProductI
     public ProductImageRepository(AppDbContext context) : base(context)
     {
     }
+
+   
 }

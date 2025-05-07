@@ -15,18 +15,18 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         // Fix: Use HasPrecision instead of HasColumnType for decimal properties
         // 
-        builder.Property(p => p.Price).IsRequired().HasPrecision(18, 2);
+        builder.Property(p => p.NewPrice).IsRequired().HasPrecision(18, 2);
 
-        builder.HasMany(p => p.ProductImages)
-            .WithOne(i => i.Product)
-            .HasForeignKey(i => i.ProductId);
+        //builder.HasMany(p => p.ProductImages)
+        //    .WithOne(i => i.Product)
+        //    .HasForeignKey(i => i.ProductId);
 
         builder.HasData( new Product
         {
             Id = Guid.NewGuid(),
             Name = "Sample Product",
             Description = "This is a sample product description.",
-            Price = 99.99m,
+            NewPrice = 99.99m,
             Quantity = 10,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now

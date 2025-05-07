@@ -1,5 +1,6 @@
 
 using Shark_Tech.DAL;
+using Shark_Tech.BL;
 public class Program
 {
     private static void Main(string[] args)
@@ -15,7 +16,10 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         builder.Services.AddDataAccessServices(builder.Configuration);
+
+        builder.Services.AddBusinessServices(builder.Configuration);
 
         var app = builder.Build();
 

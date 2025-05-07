@@ -7,5 +7,6 @@ using System.Threading.Tasks;
 namespace Shark_Tech.DAL;
 public interface IProductImageRepository : IGenericRepository<ProductImage>
 {
+    
 }
 

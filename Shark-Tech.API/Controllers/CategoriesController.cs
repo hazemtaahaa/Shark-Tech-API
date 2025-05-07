@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Shark_Tech.API.Controllers;
 using Shark_Tech.BL;
+
 using Shark_Tech.DAL;
 
 namespace Shark_Tech.API;
@@ -9,7 +11,7 @@ namespace Shark_Tech.API;
 
 public class CategoriesController : BaseController
 {
-    public CategoriesController(IUnitOfWork unitOfWork) : base(unitOfWork)
+    public CategoriesController(IUnitOfWork unitOfWork , IMapper mapper) : base(unitOfWork, mapper)
     {
     }
     [HttpGet ("get-all")]
@@ -55,14 +57,9 @@ public class CategoriesController : BaseController
     {
         try
         {
-            var category = new Category
-            {
-                Id = Guid.NewGuid(),
-                Name = categoryDTO.Name,
-                Description = categoryDTO.Description
-            };
+            var category = mapper.Map<Category>(categoryDTO);
             await unitOfWork.CategoryRepository.AddAsync(category);
-           
+
             return Ok(category);
         }
         catch (Exception ex)
@@ -76,16 +73,17 @@ public class CategoriesController : BaseController
     {
         try
         {
-            var category = await unitOfWork.CategoryRepository.GetByIdAsync(id);
+            var category = mapper.Map
+                <Category>(categoryDTO);
+            category.Id = id;
+
             if (category is null)
             {
                 return BadRequest();
             }
-            category.Name = categoryDTO.Name;
-            category.Description = categoryDTO.Description;
             await unitOfWork.CategoryRepository.UpdateAsync(category);
-
-            return Ok(new {message ="Item has been Updated"});
+   
+            return Ok(new GeneralResult<Category>(200,category,null));
 
         }
         catch (Exception ex)

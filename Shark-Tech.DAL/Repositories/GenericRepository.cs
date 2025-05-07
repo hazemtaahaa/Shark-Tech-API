@@ -57,9 +57,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         var query = _context.Set<T>().AsQueryable();
         foreach (var include in includes)
         {
+            //Console.WriteLine("Incude here------------");
+
             query = query.Include(include);
         }
         var entity = await query.FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id);
+
         if (entity == null)
         {
             throw new KeyNotFoundException($"Entity with id {id} not found.");
