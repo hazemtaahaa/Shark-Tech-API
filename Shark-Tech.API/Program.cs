@@ -1,6 +1,7 @@
 
 using Shark_Tech.DAL;
 using Shark_Tech.BL;
+using Shark_Tech.API;
 public class Program
 {
     private static void Main(string[] args)
@@ -12,6 +13,7 @@ public class Program
         // Add services to the container.
 
         builder.Services.AddControllers();
+        builder.Services.AddMemoryCache();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -31,6 +33,11 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        //app.UseExceptionHandler("/error");
+        
+        app.UseMiddleware<ExceptionMiddleware>(); // Custom exception handling middleware
+
 
         app.UseHttpsRedirection();
 

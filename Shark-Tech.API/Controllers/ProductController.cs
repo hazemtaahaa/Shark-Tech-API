@@ -20,12 +20,15 @@ namespace Shark_Tech.API.Controllers
 
 
         [HttpGet("get-all")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(string? sort,Guid? CategoryId,int? PageSize,int? PageNumber)
         {
             try
             {
-                var products = await unitOfWork.ProductRepository.GetAllAsync(x=>x.Category,x=>x.ProductImages);
-                var result =mapper.Map<IReadOnlyList<ProductDTO>>(products);
+                //  var products = await unitOfWork.ProductRepository.GetAllAsync(x=>x.Category,x=>x.ProductImages);
+               
+
+                var products = await productManager.GetAllProducts(sort,CategoryId,PageSize,PageNumber);
+                var result = mapper.Map<IReadOnlyList<ProductDTO>>(products);
                 if (products is null)
                 {
                     return BadRequest(new GeneralResult(400,"No Prodcuts Found!"));

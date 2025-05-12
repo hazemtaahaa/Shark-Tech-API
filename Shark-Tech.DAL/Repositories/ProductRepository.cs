@@ -14,12 +14,12 @@ internal class ProductRepository : GenericRepository<Product>, IProductRepositor
     {
         _context = context;
     }
-    public async Task<IReadOnlyList<Product>> GetAllWithCategoryAndImagesAsync()
+    public async Task<IQueryable<Product>> GetAllWithCategoryAndImagesAsync()
     {
-        return await _context.Products
+        return  _context.Products
             .Include(p => p.Category)
             .Include(p => p.ProductImages)
-            .ToListAsync();
+            .AsNoTracking();
     }
     public async Task<Product> GetByIdWithCategoryAndImagesAsync(Guid id)
     {

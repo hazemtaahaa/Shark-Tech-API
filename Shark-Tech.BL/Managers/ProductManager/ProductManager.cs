@@ -15,6 +15,85 @@ public class ProductManager: IProductManager
         this.unitOfWork = unitOfWork;
         this.imageManager = imageManager;
     }
+
+    //get all products
+    public async Task<IReadOnlyList<ProductDTO>> GetAllProducts()
+    {
+        var products = await unitOfWork.ProductRepository.GetAllWithCategoryAndImagesAsync();
+
+       
+
+        // Include related entities
+        var result = products.Select(x => new ProductDTO
+        {
+            Id = x.Id,
+            Name = x.Name,
+            Description = x.Description,
+            NewPrice = x.NewPrice,
+            OldPrice = x.OldPrice,
+            CreatedAt = x.CreatedAt,
+            UpdatedAt = x.UpdatedAt,
+            Quantity = x.Quantity,
+            CategoryName = x.Category.Name,
+            ProductImages = x.ProductImages.Select(y => new ProductImageDTO
+            {
+                ImageUrl = y.ImageUrl,
+                ProductId = y.ProductId
+            }).ToList()
+        }).ToList();
+
+        return result;
+    }
+
+    //get all products with sorting and filtering
+    public async Task<IReadOnlyList<ProductDTO>> GetAllProducts(string? sort,Guid? CategoryId, int? PageSize, int? PageNumber)
+    {
+        var products = await unitOfWork.ProductRepository.GetAllWithCategoryAndImagesAsync();
+
+        //filter by category
+        if (CategoryId.HasValue)
+            products = products.Where(x => x.CategoryId == CategoryId.Value);
+
+        if (!string.IsNullOrEmpty(sort))
+        {
+            products = sort switch
+            {
+                "PriceAce" => products.OrderBy(x => x.NewPrice),
+                "PriceDce" => products.OrderByDescending(x => x.NewPrice),
+                _ => products.OrderBy(x => x.Name),
+            };
+        }
+        PageNumber = PageNumber>0 ? PageNumber:1;
+        PageSize = PageSize > 0 ? PageSize : 3;
+        //pagination
+        if (PageSize.HasValue && PageNumber.HasValue)
+        {
+            products = products.Skip((PageNumber.Value - 1) * PageSize.Value).Take(PageSize.Value);
+        }
+
+        // Include related entities
+        var result = products.Select(x => new ProductDTO
+       {
+           Id = x.Id,
+           Name = x.Name,
+           Description = x.Description,
+           NewPrice = x.NewPrice,
+           OldPrice = x.OldPrice,
+           CreatedAt = x.CreatedAt,
+           UpdatedAt = x.UpdatedAt,
+           Quantity = x.Quantity,
+           CategoryName = x.Category.Name,
+           ProductImages = x.ProductImages.Select(y => new ProductImageDTO
+           {
+               ImageUrl = y.ImageUrl,
+               ProductId = y.ProductId
+           }).ToList()
+       }).ToList();
+
+        return result;
+    }
+
+    //add product
     public async Task<bool> AddProduct(AddProductDTO productDTO)
     {
         if (productDTO is null)
@@ -67,9 +146,9 @@ public class ProductManager: IProductManager
         return true;
     }
 
-   
 
-    async Task<bool> IProductManager.UpdateProduct(UpdateProductDTO productDTO)
+    //update product
+    public async Task<bool> UpdateProduct(UpdateProductDTO productDTO)
     {
 
         //find the product
@@ -123,8 +202,8 @@ public class ProductManager: IProductManager
 
     }
 
-
-   async Task<bool> IProductManager.DeleteProduct(Guid id)
+    // delete product
+    public async Task<bool> DeleteProduct(Guid id)
     {
         //find the product
         var product = await unitOfWork.ProductRepository.GetByIdWithCategoryAndImagesAsync(id);
