@@ -46,29 +46,33 @@ public class ProductManager: IProductManager
     }
 
     //get all products with sorting and filtering
-    public async Task<IReadOnlyList<ProductDTO>> GetAllProducts(string? sort,Guid? CategoryId, int? PageSize, int? PageNumber)
+    public async Task<IReadOnlyList<ProductDTO>> GetAllProducts(ProductParams productParams)
     {
         var products = await unitOfWork.ProductRepository.GetAllWithCategoryAndImagesAsync();
 
+        //filter by search
+        if(!string.IsNullOrEmpty(productParams.Search))
+            products = products
+                .Where(x => x.Name.ToLower().Contains(productParams.Search.ToLower()) 
+                || x.Description.ToLower().Contains(productParams.Search.ToLower()));
         //filter by category
-        if (CategoryId.HasValue)
-            products = products.Where(x => x.CategoryId == CategoryId.Value);
+        if (productParams.CategoryId.HasValue)
+            products = products.Where(x => x.CategoryId == productParams.CategoryId.Value);
 
-        if (!string.IsNullOrEmpty(sort))
+        if (!string.IsNullOrEmpty(productParams.Sort))
         {
-            products = sort switch
+            products = productParams.Sort switch
             {
                 "PriceAce" => products.OrderBy(x => x.NewPrice),
                 "PriceDce" => products.OrderByDescending(x => x.NewPrice),
                 _ => products.OrderBy(x => x.Name),
             };
         }
-        PageNumber = PageNumber>0 ? PageNumber:1;
-        PageSize = PageSize > 0 ? PageSize : 3;
+       
         //pagination
-        if (PageSize.HasValue && PageNumber.HasValue)
+        if (productParams.PageSize>0 && productParams.PageNumber.HasValue)
         {
-            products = products.Skip((PageNumber.Value - 1) * PageSize.Value).Take(PageSize.Value);
+            products = products.Skip((productParams.PageNumber.Value - 1) * productParams.PageSize).Take(productParams.PageSize);
         }
 
         // Include related entities

@@ -75,4 +75,9 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _context.Entry(entity).State = EntityState.Modified;
         await _context.SaveChangesAsync();
     }
+
+    public Task<int> CountAsync()
+    {
+        return _context.Set<T>().CountAsync();
+    }
 }
