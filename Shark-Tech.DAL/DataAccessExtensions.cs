@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,14 @@ public static class DataAccessExtensions
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+      
+                services.AddSingleton<IConnectionMultiplexer>(provider =>
+                {
+                    var config = ConfigurationOptions.Parse(configuration.GetConnectionString("RedisConnection"));
+                    return ConnectionMultiplexer.Connect(config);
+                });
+         
+    
         // apply DbContext configuration
         services.AddDbContext<AppDbContext>(options =>
         {
