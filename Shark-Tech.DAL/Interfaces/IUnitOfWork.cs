@@ -12,6 +12,8 @@ public interface IUnitOfWork
     IProductRepository ProductRepository { get; }
     IProductImageRepository ProductImageRepository { get; }
 
+    ICustomerCartRepository CustomerCartRepository { get; }
+
     Task<int> CompleteAsync();
 
 }
