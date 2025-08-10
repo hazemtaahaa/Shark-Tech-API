@@ -12,11 +12,11 @@ namespace Shark_Tech.DAL.Models.CustomerCart
         {
             
         }
-        public CustomerCart(int id)
+        public CustomerCart(Guid id)
         {
             Id = id;
         }
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public List<CartItem> Items { get; set; } = new List<CartItem>();
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

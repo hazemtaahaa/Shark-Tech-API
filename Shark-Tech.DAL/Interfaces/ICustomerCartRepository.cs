@@ -9,9 +9,9 @@ namespace Shark_Tech.DAL
 {
     public interface ICustomerCartRepository
     {
-        Task<CustomerCart> GetCartAsync(int Id);
+        Task<CustomerCart> GetCartAsync(Guid Id);
         Task<CustomerCart> UpdateCartAsync( CustomerCart cart);
 
-        Task<bool> DeleteCartAsync(int Id);
+        Task<bool> DeleteCartAsync(Guid Id);
     }
 }

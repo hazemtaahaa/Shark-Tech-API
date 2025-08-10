@@ -21,15 +21,15 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         //    .WithOne(i => i.Product)
         //    .HasForeignKey(i => i.ProductId);
 
-        builder.HasData( new Product
-        {
-            Id = Guid.NewGuid(),
-            Name = "Sample Product",
-            Description = "This is a sample product description.",
-            NewPrice = 99.99m,
-            Quantity = 10,
-            CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now
-        });
+        //builder.HasData( new Product
+        //{
+        //    Id = Guid.NewGuid(),
+        //    Name = "Sample Product",
+        //    Description = "This is a sample product description.",
+        //    NewPrice = 99.99m,
+        //    Quantity = 10,
+        //    CreatedAt = DateTime.Now,
+        //    UpdatedAt = DateTime.Now
+        //});
     }
 }

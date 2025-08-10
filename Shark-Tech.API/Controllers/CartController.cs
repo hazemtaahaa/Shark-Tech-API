@@ -14,7 +14,7 @@ namespace Shark_Tech.API.Controllers
 
         }
         [HttpGet("GetCartItems/{Id}")]
-        public async Task<IActionResult> GetCartItems(int Id)
+        public async Task<IActionResult> GetCartItems(Guid Id)
         {
             var cartItems = await unitOfWork.CustomerCartRepository.GetCartAsync(Id);
             if (cartItems == null)
@@ -27,7 +27,7 @@ namespace Shark_Tech.API.Controllers
         [HttpPost("UpdateCartItems")]
         public async Task<IActionResult> UpdateCartItems([FromBody] CustomerCart cart)
         {
-            if (cart == null || cart.Id <= 0)
+            if (cart == null )
             {
                 return BadRequest("Invalid cart data.");
             }
@@ -40,9 +40,9 @@ namespace Shark_Tech.API.Controllers
         }
 
         [HttpDelete("DeleteCart/{Id}")]
-        public async Task<IActionResult> DeleteCart(int Id)
+        public async Task<IActionResult> DeleteCart(Guid Id)
         {
-            if (Id <= 0)
+            if (Id == null)
             {
                 return BadRequest("Invalid  ID.");
             }

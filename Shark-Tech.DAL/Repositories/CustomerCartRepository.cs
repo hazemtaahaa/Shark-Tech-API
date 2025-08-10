@@ -18,12 +18,12 @@ namespace Shark_Tech.DAL
         {
                 _database = redis.GetDatabase();
         }
-        public Task<bool> DeleteCartAsync(int Id)
+        public Task<bool> DeleteCartAsync(Guid Id)
         {
            return _database.KeyDeleteAsync($"{Id}");
         }
 
-        public async Task<CustomerCart> GetCartAsync(int Id)
+        public async Task<CustomerCart> GetCartAsync(Guid Id)
         {
             var result = await _database.StringGetAsync($"{Id}");
             if(!string.IsNullOrEmpty(result))

@@ -1,4 +1,6 @@
-﻿using StackExchange.Redis;
+﻿using Microsoft.AspNetCore.Identity;
+using Shark_Tech.DAL.Repositories;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,17 +19,24 @@ public class UnitOfWork : IUnitOfWork
 
     public ICustomerCartRepository CustomerCartRepository { get; }
 
+    public IAuth Auth { get; } 
+
     private readonly AppDbContext _context;
     private readonly IConnectionMultiplexer _redis;
 
-    public UnitOfWork(AppDbContext context , IConnectionMultiplexer redis)
+    private readonly UserManager<AppUser> _userManager;
+
+    public UnitOfWork(AppDbContext context , IConnectionMultiplexer redis,
+        UserManager<AppUser> userManager)
     {
         _context = context;
         _redis = redis;
+        _userManager = userManager;
         CategoryRepository = new CategoryRepository(_context);
         ProductRepository = new ProductRepository(_context);
         ProductImageRepository = new ProductImageRepository(_context);
         CustomerCartRepository = new CustomerCartRepository(_redis);
+        Auth = new AuthRepository( _userManager);
     }
 
     public async Task<int> CompleteAsync() => await _context.SaveChangesAsync();

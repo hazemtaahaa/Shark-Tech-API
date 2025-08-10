@@ -14,6 +14,8 @@ public interface IUnitOfWork
 
     ICustomerCartRepository CustomerCartRepository { get; }
 
+    IAuth Auth { get; }
+
     Task<int> CompleteAsync();
 
 }
